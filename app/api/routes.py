@@ -98,9 +98,25 @@ def approve_rule(rule_id: str) -> RuleDraft:
     return rule
 
 
+@router.post("/api/incidents/{incident_id}/council", response_model=Incident)
+def run_incident_council(incident_id: str) -> Incident:
+    """Kural ihlali için LLM Council (çoklu model) önerisi üretir. Son karar insanda."""
+    item = store.get_incident(incident_id)
+    if not item:
+        raise HTTPException(404, "incident not found")
+    try:
+        from app.council.deliberate import run_council
+    except ImportError as exc:
+        raise HTTPException(501, "council module not ready") from exc
+    verdict = run_council(item)
+    updated = store.set_council(incident_id, verdict)
+    assert updated is not None
+    return updated
+
+
 @router.post("/api/demo/spawn", response_model=Incident)
 def demo_spawn() -> Incident:
-    """Hakem demosu: örnek baretsiz çalışan olayı."""
+    """Hakem demosu: örnek baretsiz çalışan olayı + konsey turu."""
     try:
         from app.scoring.explain import build_explanation
     except ImportError:
@@ -127,4 +143,12 @@ def demo_spawn() -> Incident:
         ai_explanation=explanation,
         action_plan=plan,
     )
-    return store.create_incident(body)
+    created = store.create_incident(body)
+    try:
+        from app.council.deliberate import run_council
+
+        verdict = run_council(created, prefer_live=False)
+        created = store.set_council(created.id, verdict) or created
+    except Exception:
+        pass
+    return created

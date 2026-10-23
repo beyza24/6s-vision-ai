@@ -57,6 +57,28 @@ class Store:
             self.incidents[incident_id] = updated
             return updated
 
+    def set_council(self, incident_id: str, council) -> Optional[Incident]:
+        with self._lock:
+            item = self.incidents.get(incident_id)
+            if not item:
+                return None
+            updates: dict = {"council": council}
+            # Konsey önerisi alanları günceller; insan hâlâ onaylar
+            if council is not None:
+                updates.update(
+                    {
+                        "principle_6s": council.principle_6s,
+                        "priority": council.priority,
+                        "confidence": council.confidence,
+                        "ai_explanation": council.synthesis or item.ai_explanation,
+                    }
+                )
+                if not council.is_violation:
+                    updates["status"] = IncidentStatus.review
+            updated = item.model_copy(update=updates)
+            self.incidents[incident_id] = updated
+            return updated
+
     def add_rule(self, rule: RuleDraft) -> RuleDraft:
         with self._lock:
             self.rules[rule.id] = rule

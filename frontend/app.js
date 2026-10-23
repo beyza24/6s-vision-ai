@@ -43,6 +43,26 @@ async function selectIncident(id) {
     li.textContent = step;
     plan.appendChild(li);
   }
+  const box = document.getElementById("council-box");
+  const votesUl = document.getElementById("d-council-votes");
+  votesUl.innerHTML = "";
+  if (it.council) {
+    box.hidden = false;
+    document.getElementById("d-council-syn").textContent =
+      `[${it.council.mode}] ${it.council.synthesis || ""}`;
+    document.getElementById("d-council-dissent").textContent = it.council.dissent
+      ? `Muhalefet: ${it.council.dissent}`
+      : "Muhalefet yok.";
+    for (const v of it.council.votes || []) {
+      const li = document.createElement("li");
+      li.textContent = `${v.model_name} (${v.provider}): ${
+        v.is_violation ? "ihlal" : "ihlal yok"
+      } · ${v.priority} · ${(v.confidence * 100).toFixed(0)}% — ${v.rationale}`;
+      votesUl.appendChild(li);
+    }
+  } else {
+    box.hidden = true;
+  }
   refreshList();
 }
 
@@ -61,6 +81,12 @@ document.getElementById("btn-demo").onclick = async () => {
   await refreshList();
   await refreshScores();
   await selectIncident(it.id);
+};
+
+document.getElementById("btn-council").onclick = async () => {
+  if (!selectedId) return;
+  await api(`/api/incidents/${selectedId}/council`, { method: "POST" });
+  await selectIncident(selectedId);
 };
 
 document.getElementById("btn-confirm").onclick = async () => {

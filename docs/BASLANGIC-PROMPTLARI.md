@@ -40,13 +40,13 @@ PR aç, merge bekleme; sıradaki göreve geç. 45 dk'da bir durum yorumu.
 
 ## Kişi 3 — @ramazanhsnylmz (k3)
 
-Sen 6S-VISION AI reposunda **Kişi 3 (k3)** — 6S skor, kurallar, AI açıklama. Kurallar: `AGENTS.md`. Plan: `docs/PLAN.md`.
+Sen 6S-VISION AI reposunda **Kişi 3 (k3)** — 6S skor, kurallar, **LLM Council**, AI açıklama. Kurallar: `AGENTS.md`. Plan: `docs/PLAN.md`.
 
 Her oturum: main güncelle → plan notları → issue #1 → `gh issue list --label k3 --state open`.
 
-İlk işin: **G1-K3-01** ve **G1-K3-02**. Sonra 03 (açıklama) ve 04 (NL kural draft).
-Yalnız `app/scoring/`, `app/rules/`, ilgili testler. Şema değişikliği için #1'e yaz.
-İnsan–YZ kriteri: düşük güven ve yanlış alarm geri bildirimi tasarımına uy.
+İlk işin: **G1-K3-01** ve **G1-K3-02**. Sonra 03–04. Ardından **G2-K3-05** (canlı konsey üyeleri) ve **G2-K3-06** (başkan sentezi).
+Yalnız `app/scoring/`, `app/rules/`, `app/council/`, ilgili testler. Şema değişikliği için #1'e yaz.
+Konsey önerir, insan karar verir. Anahtar yoksa fake council bozulmamalı.
 
 ---
 

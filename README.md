@@ -36,10 +36,15 @@ python -m pytest -q
 
 ## Hakem demosu (2 dk)
 
-1. **Demo: yeni tespit** → baretsiz çalışan (%94)  
-2. AI açıklama + eylem planı  
+1. **Demo: yeni tespit** → baretsiz çalışan + **LLM Council** oyları  
+2. Konsey sentezi / muhalefet → AI açıklama  
 3. **Doğrula** → **Faaliyet ata & çöz** → skor güncellenir  
 4. İstersen **Yanlış Alarm** ile insan kapısını göster  
+
+## LLM Council
+
+Kural ihlalinde tek modele güvenilmez. Birden fazla LLM bağımsız oy verir; başkan sentezler.  
+Son karar insandadır. Detay: `app/council/README.md`.
 
 ## Problem (kısa)
 
@@ -47,4 +52,4 @@ python -m pytest -q
 
 ## Çözüm akışı
 
-Gözlemle → Tespit et → 6S ile ilişkilendir → İnsan doğrular → Düzelt ve izle
+Gözlemle → Tespit et → **LLM Council** → İnsan doğrular → Düzelt ve izle

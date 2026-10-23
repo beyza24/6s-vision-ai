@@ -43,8 +43,10 @@
       "paths": [
         "app/scoring/",
         "app/rules/",
+        "app/council/",
         "tests/test_scoring.py",
-        "tests/test_rules.py"
+        "tests/test_rules.py",
+        "tests/test_council.py"
       ]
     },
     "k4": {

@@ -46,6 +46,33 @@ class BBox(BaseModel):
     h: float
 
 
+class CouncilMemberVote(BaseModel):
+    """Tek bir konsey üyesinin (model) bağımsız oyu."""
+
+    member_id: str
+    model_name: str
+    provider: str
+    is_violation: bool
+    principle_6s: Principle6S
+    priority: Priority
+    confidence: float = Field(ge=0, le=1)
+    rationale: str = ""
+
+
+class CouncilVerdict(BaseModel):
+    """LLM Council nihai önerisi — son karar yine insanda."""
+
+    is_violation: bool
+    principle_6s: Principle6S
+    priority: Priority
+    confidence: float = Field(ge=0, le=1)
+    synthesis: str = ""
+    dissent: str = ""
+    votes: list[CouncilMemberVote] = Field(default_factory=list)
+    mode: str = "fake"  # fake | live
+    human_final: bool = True
+
+
 class Incident(BaseModel):
     id: str
     camera_id: str = "cam-1"
@@ -61,6 +88,7 @@ class Incident(BaseModel):
     ai_explanation: str = ""
     action_plan: list[str] = Field(default_factory=list)
     assignee: Optional[str] = None
+    council: Optional[CouncilVerdict] = None
 
 
 class IncidentCreate(BaseModel):
@@ -75,6 +103,7 @@ class IncidentCreate(BaseModel):
     bbox: Optional[BBox] = None
     ai_explanation: str = ""
     action_plan: list[str] = Field(default_factory=list)
+    council: Optional[CouncilVerdict] = None
 
 
 class AssignBody(BaseModel):

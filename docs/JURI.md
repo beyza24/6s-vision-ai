@@ -18,7 +18,12 @@ Arayüz ve iş akışı çalışır: doğrulama, faaliyet, skor, kural taslağı
 
 ## Hangi model?
 
-Görüntü: nesne tespiti (YOLO ailesi gibi) + fabrikaya özel ince ayar (pilot). Doğal dil kuralları: dil modeli. Hackathon’da FakeDetector + şablon/LLM açıklama kabul.
+Görüntü: nesne tespiti (YOLO ailesi gibi) + fabrikaya özel ince ayar (pilot).  
+**Kural ihlali kararı:** tek modele güvenmiyoruz. **LLM Council** (Karpathy tarzı) — birden fazla LLM bağımsız oy verir, bir başkan sentezler; panelde oylar ve muhalefet görünür. Son karar İSG uzmanındadır. Anahtar yoksa demo için fake council çalışır; canlıda OpenAI / OpenRouter / Anthropic / Gemini bağlanabilir.
+
+## Neden konsey, tek model değil?
+
+Yanlış alarm ve ışık/açı hatalarında tek model aşırı emin olabilir. Çoklu model + dissent, insan–YZ güvenilirliğini güçlendirir.
 
 ## Neden fabrika?
 

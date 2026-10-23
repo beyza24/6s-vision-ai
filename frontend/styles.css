@@ -57,8 +57,18 @@ button {
 .list li:hover, .list li.sel { border-color: var(--blue); background: #0f2242; }
 .mute { color: var(--mute); }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.actions button:nth-child(2) { background: #3a2a07; color: #ffc65c; }
-.actions button:nth-child(3) { background: #0e3321; color: #aef0c6; }
+.actions button:nth-child(2) { background: #1e3a5f; color: #cfe0ff; }
+.actions button:nth-child(3) { background: #3a2a07; color: #ffc65c; }
+.actions button:nth-child(4) { background: #0e3321; color: #aef0c6; }
+.council {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px;
+  background: #08142a;
+}
+.council h4 { margin: 0 0 6px; }
+.council ul { margin: 8px 0 0; padding-left: 18px; }
 pre {
   background: #08142a;
   border: 1px solid var(--line);

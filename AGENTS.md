@@ -9,7 +9,7 @@ Bu dosya tüm AI kod agent'ları (Cursor, Claude Code, Codex, Gemini CLI) için 
 |--------|--------|-----|----------|
 | **k1** | [@beyza24](https://github.com/beyza24) | Omurga + **koordinatör (merge)** | `app/` kök, `app/api/`, `app/schemas.py`, `app/store.py`, `app/main.py`, `requirements.txt`, `.env.example`, `.github/`, `tests/test_health.py`, `docs/PLAN.md` (Bölüm 3–4) |
 | **k2** | [@nazlibeyza](https://github.com/nazlibeyza) | Görüntü / tespit | `app/vision/`, `tests/test_vision*` |
-| **k3** | [@ramazanhsnylmz](https://github.com/ramazanhsnylmz) | 6S skor + kurallar + AI açıklama | `app/scoring/`, `app/rules/`, `tests/test_scoring*`, `tests/test_rules*` |
+| **k3** | [@ramazanhsnylmz](https://github.com/ramazanhsnylmz) | 6S skor + kurallar + **LLM Council** + AI açıklama | `app/scoring/`, `app/rules/`, `app/council/`, `tests/test_scoring*`, `tests/test_rules*`, `tests/test_council*` |
 | **k4** | [@cosareda](https://github.com/cosareda) | Denetim paneli (UI) | `frontend/`, `prototype/` (referans), `tests/test_frontend*` |
 
 Ortak salt-okunur: `docs/`, `AGENTS.md`, `README.md` (içerik değişikliği plan PR veya #1 üzerinden).

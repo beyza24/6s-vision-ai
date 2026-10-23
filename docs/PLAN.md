@@ -13,16 +13,17 @@
 | Ortak şema yalnız k1 değiştirir | k1 | kilitli |
 | UI `frontend/` altında; prototip salt referans | k4 | kilitli |
 | Merge yalnız k1 (@beyza24) | k1 | kilitli |
+| Kural ihlali kararında **LLM Council** (çoklu model); son karar insan | k1 | kilitli |
 
 ## 2. Hakem kriterleri (hedef kanıt)
 
 | Kriter (20) | Kanıt |
 |-------------|--------|
 | Problem gerçekliği | Sunum + README problem özeti |
-| YZ kullanımı | Tespit + 6S eşleme + açıklama + NL kural |
-| Uygulanabilirlik | Mevcut kamera / Faz 1 tek hat; çalışan API+UI |
-| İnsan–YZ güvenilirlik | Doğrula / yanlış alarm / düşük güven→inceleme |
-| Sunum | Demo scripti: tespit→onay→faaliyet→skor |
+| YZ kullanımı | Tespit + 6S eşleme + **LLM Council** + NL kural |
+| Uygulanabilirlik | Mevcut kamera / Faz 1 tek hat; çalışan API+UI; anahtarsız fake council |
+| İnsan–YZ güvenilirlik | Konsey önerir → insan doğrular / yanlış alarm; dissent görünür |
+| Sunum | Demo: tespit → konsey oyları → onay → faaliyet → skor |
 
 ## 3. Teknik kararlar (yalnız k1)
 
@@ -31,7 +32,9 @@
 - Frontend: statik panel (`frontend/`), API'ye bağlanır
 - Vision: `Detector` arayüzü + `FakeDetector` (k2); gerçek model opsiyonel adaptor
 - Kurallar: doğal dil → yapılandırılmış kural (k3); onay olmadan aktif olmaz
+- **LLM Council (Karpathy tarzı):** ihlal değerlendirmesinde birden fazla LLM bağımsız oy verir; başkan sentezler; `app/council/`. Anahtar yoksa `fake` mod. Canlıda OpenAI / OpenRouter / Anthropic / Gemini uyumlu endpoint’ler (`.env`).
 - Gizlilik: kimlik yok; ihlal kaydı
+- Konsey **önerir**, insan **karar verir** (slogan bozulmaz)
 
 ## 4. Şema / API imzaları (yalnız k1)
 
@@ -43,6 +46,7 @@
 - `title`, `description`, `priority` (high | medium | low)
 - `confidence` (0–1), `status` (open | review | resolved | false_alarm)
 - `bbox` opsiyonel, `ai_explanation`, `action_plan`, `assignee` opsiyonel
+- `council` opsiyonel (`CouncilVerdict`: oylar, sentez, dissent, mode)
 
 ### Endpoint taslağı
 
@@ -51,9 +55,10 @@
 - `POST /api/incidents/{id}/confirm`
 - `POST /api/incidents/{id}/false-alarm`
 - `POST /api/incidents/{id}/assign`
+- `POST /api/incidents/{id}/council` — LLM Council turu
 - `GET /api/scores/6s`
 - `POST /api/rules/parse` (NL → draft), `POST /api/rules/{id}/approve`
-- `POST /api/demo/spawn` (demo tespit)
+- `POST /api/demo/spawn` (demo tespit + fake council)
 
 Alan ekleme → issue #1; uygular k1.
 
@@ -123,12 +128,21 @@ Bkz. `AGENTS.md` Bölüm 0 ve `.github/ownership.json`.
 
 ## 11. Gün 2 / cilâ (öncelik sırası)
 
+**G2-K3-05 LLM Council canlı üyeler** (S1)  
+- Kabul: `.env` ile ≥2 gerçek model oy verir; anahtar yoksa fake’e düşer; test yeşil.
+
+**G2-K3-06 Başkan prompt iyileştirmesi** (S1)  
+- Kabul: dissent + sentez Türkçe ve hakem demosunda okunaklı.
+
+**G2-K4-05 Konsey paneli UI** (S1)  
+- Kabul: detayda her modelin oyu, sentez ve muhalefet görünür; “Konseyi çalıştır” butonu.
+
 **G2-K2-01** Düşük güven → `review` durumu üretimi  
-**G2-K3-05** Yanlış alarm geri bildiriminin eşiğe etkisi (basit)  
-**G2-K3-06** Kural onay akışı UI sözleşmesi  
-**G2-K4-05** Raporlar ekranı (hafif) + mahremiyet notu UI  
-**G2-K1-06** README hakem özeti + demo scripti  
-**G2-K1-07** Sunum linkleri / jüri yedek cevapları `docs/JURI.md`
+**G2-K3-07** Yanlış alarm geri bildiriminin eşiğe etkisi (basit)  
+**G2-K3-08** Kural onay akışı UI sözleşmesi  
+**G2-K4-06** Raporlar ekranı (hafif) + mahremiyet notu UI  
+**G2-K1-06** README hakem özeti + demo scripti (konsey maddesi dahil)  
+**G2-K1-07** Sunum / jüri: LLM Council anlatımı `docs/JURI.md`
 
 ## 12–13. (rezerve)
 
