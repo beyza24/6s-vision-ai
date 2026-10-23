@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>6S-VISION AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <h1>6S-VISION AI</h1>
+        <p>Yapay zekâ görür, insan karar verir.</p>
+      </div>
+      <button id="btn-demo" type="button">Demo: yeni tespit</button>
+    </header>
+
+    <main class="main">
+      <section class="card">
+        <h2>Uygunsuzluklar</h2>
+        <ul id="incident-list" class="list"></ul>
+      </section>
+      <section class="card" id="detail">
+        <h2>Detay &amp; AI Analizi</h2>
+        <p id="detail-empty" class="mute">Listeden bir olay seçin.</p>
+        <div id="detail-body" hidden>
+          <h3 id="d-title"></h3>
+          <p id="d-meta" class="mute"></p>
+          <p id="d-explain"></p>
+          <ul id="d-plan"></ul>
+          <div class="actions">
+            <button id="btn-confirm" type="button">Doğrula</button>
+            <button id="btn-false" type="button">Yanlış Alarm</button>
+            <button id="btn-assign" type="button">Faaliyet ata &amp; çöz</button>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <h2>6S Skorları</h2>
+        <pre id="scores">Yükleniyor…</pre>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

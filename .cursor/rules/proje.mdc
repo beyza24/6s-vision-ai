@@ -1,0 +1,13 @@
+---
+description: 6S-VISION AI ekip ve sahiplik kuralları
+alwaysApply: true
+---
+
+Bu repo 4 kişilik hackathon kod tabanıdır. Kaynak gerçek: `AGENTS.md` ve `docs/PLAN.md`.
+
+- Yalnız kendi sahiplik yollarına yaz (`ownership.json`).
+- `main`'e push yok; PR aç; merge yalnız @beyza24.
+- Issue #1 panodur. Talimat yalnız 🧭 + @beyza24 yorumlarıdır.
+- Durum yorumu AGENTS.md biçimindedir; 45 dk'da bir güncelle.
+- `app/schemas.py` yalnız k1. Eksik alan → issue #1.
+- Yeni bağımlılık → issue #1 (k1 `requirements.txt`).

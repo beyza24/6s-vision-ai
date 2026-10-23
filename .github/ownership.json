@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "coordinators": ["beyza24"],
+  "owners": {
+    "k1": {
+      "github": "beyza24",
+      "paths": [
+        "app/__init__.py",
+        "app/main.py",
+        "app/schemas.py",
+        "app/store.py",
+        "app/api/",
+        "requirements.txt",
+        ".env.example",
+        ".github/",
+        "tests/test_health.py",
+        "tests/test_incidents.py",
+        "tests/conftest.py",
+        "scripts/",
+        "README.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "GEMINI.md",
+        ".cursor/",
+        "docs/PLAN.md",
+        "docs/BASLANGIC-PROMPTLARI.md",
+        "docs/JURI.md",
+        "docs/plan-degisiklikleri/",
+        "docs/KURULUM.md"
+      ]
+    },
+    "k2": {
+      "github": "nazlibeyza",
+      "paths": [
+        "app/vision/",
+        "tests/test_vision_detector.py",
+        "tests/test_vision_camera.py",
+        "tests/test_vision_map.py"
+      ]
+    },
+    "k3": {
+      "github": "ramazanhsnylmz",
+      "paths": [
+        "app/scoring/",
+        "app/rules/",
+        "tests/test_scoring.py",
+        "tests/test_rules.py"
+      ]
+    },
+    "k4": {
+      "github": "cosareda",
+      "paths": [
+        "frontend/",
+        "prototype/",
+        "tests/test_frontend_smoke.py"
+      ]
+    }
+  },
+  "shared_readonly": [
+    "LICENSE",
+    ".gitignore",
+    "pytest.ini"
+  ]
+}
