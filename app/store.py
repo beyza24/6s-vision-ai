@@ -63,13 +63,12 @@ class Store:
             if not item:
                 return None
             updates: dict = {"council": council}
-            # Konsey önerisi alanları günceller; insan hâlâ onaylar
+            # Konsey önerir; dedektör confidence korunur. İnsan hâlâ onaylar.
             if council is not None:
                 updates.update(
                     {
                         "principle_6s": council.principle_6s,
                         "priority": council.priority,
-                        "confidence": council.confidence,
                         "ai_explanation": council.synthesis or item.ai_explanation,
                     }
                 )
