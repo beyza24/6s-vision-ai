@@ -5,6 +5,20 @@ from collections import Counter
 
 from app.schemas import CouncilMemberVote, CouncilVerdict, Priority, Principle6S
 
+_PRINCIPLE_TR = {
+    Principle6S.seiri: "Ayıklama",
+    Principle6S.seiton: "Düzen",
+    Principle6S.seiso: "Temizlik",
+    Principle6S.seiketsu: "Standartlaştırma",
+    Principle6S.shitsuke: "Disiplin",
+    Principle6S.safety: "Güvenlik",
+}
+_PRIORITY_TR = {
+    Priority.high: "yüksek",
+    Priority.medium: "orta",
+    Priority.low: "düşük",
+}
+
 
 def synthesize(votes: list[CouncilMemberVote], *, mode: str) -> CouncilVerdict:
     if not votes:
@@ -29,27 +43,31 @@ def synthesize(votes: list[CouncilMemberVote], *, mode: str) -> CouncilVerdict:
     agreeing = [v for v in votes if v.is_violation == is_violation]
     dissenting = [v for v in votes if v.is_violation != is_violation]
 
-    synthesis_parts = [
-        f"Konsey {len(votes)} model ile değerlendirdi; "
-        f"{'ihlal' if is_violation else 'ihlal yok'} yönünde {violation_yes}/{len(votes)} oy.",
-        f"Çoğunluk ilkesi: {principle.value}, öncelik: {priority.value}.",
-    ]
-    if agreeing:
-        synthesis_parts.append("Gerekçe özeti: " + agreeing[0].rationale)
+    karar = "ihlal var" if is_violation else "ihlal yok"
+    synthesis = (
+        f"Öneri: {karar}. "
+        f"{len(votes)} modelden {violation_yes} tanesi ihlal dedi. "
+        f"İlke {_PRINCIPLE_TR[principle]}, öncelik {_PRIORITY_TR[priority]}. "
+    )
+    if agreeing and agreeing[0].rationale:
+        synthesis += f"Gerekçe: {agreeing[0].rationale} "
+    synthesis += "Son karar İSG uzmanındadır."
 
     dissent = ""
     if dissenting:
-        dissent = "; ".join(
-            f"{v.model_name}: {v.rationale or ('ihlal yok' if not v.is_violation else 'ihlal var')}"
-            for v in dissenting
-        )
+        parts = []
+        for vote in dissenting:
+            side = "ihlal yok" if not vote.is_violation else "ihlal var"
+            why = vote.rationale or side
+            parts.append(f"{vote.model_name} ({side}): {why}")
+        dissent = "Muhalif görüş — " + " | ".join(parts)
 
     return CouncilVerdict(
         is_violation=is_violation,
         principle_6s=principle,
         priority=priority,
         confidence=round(confidence, 3),
-        synthesis=" ".join(synthesis_parts),
+        synthesis=synthesis,
         dissent=dissent,
         votes=votes,
         mode=mode,

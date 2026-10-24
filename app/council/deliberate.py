@@ -15,7 +15,10 @@ def run_council(incident: Incident, *, prefer_live: bool = True) -> CouncilVerdi
 
             if live_available():
                 votes = collect_live_votes(incident)
-                mode = "live"
+                if len(votes) >= 2:
+                    mode = "live"
+                else:
+                    votes = []
         except Exception:
             votes = []
             mode = "fake"

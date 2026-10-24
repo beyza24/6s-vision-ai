@@ -27,6 +27,78 @@ def test_fake_council_returns_votes_and_synthesis():
     assert verdict.is_violation is True
 
 
+def test_chairman_synthesis_and_dissent_are_turkish():
+    incident = _incident().model_copy(update={"confidence": 0.55})
+    verdict = run_council(incident, prefer_live=False)
+    assert verdict.is_violation is True
+    assert "Öneri:" in verdict.synthesis
+    assert "Son karar İSG uzmanındadır." in verdict.synthesis
+    assert verdict.dissent.startswith("Muhalif görüş")
+
+
+def test_missing_keys_stay_on_fake(monkeypatch):
+    for name in (
+        "OPENAI_API_KEY",
+        "COUNCIL_API_KEY",
+        "OPENROUTER_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "GOOGLE_API_KEY",
+        "COUNCIL_MEMBERS",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    verdict = run_council(_incident(), prefer_live=True)
+    assert verdict.mode == "fake"
+    assert len(verdict.votes) == 3
+
+
+def test_two_live_members_vote(monkeypatch):
+    monkeypatch.setenv(
+        "COUNCIL_MEMBERS",
+        "openai:gpt-4o-mini,openrouter:anthropic/claude-3.5-sonnet",
+    )
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai")
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test-router")
+
+    class _Response:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict:
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": (
+                                '{"is_violation":true,"principle_6s":"safety",'
+                                '"priority":"high","confidence":0.91,"rationale":"baret yok"}'
+                            )
+                        }
+                    }
+                ]
+            }
+
+    class _Client:
+        def __init__(self, *args, **kwargs) -> None:
+            return None
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args) -> bool:
+            return False
+
+        def post(self, url, headers, json):
+            assert headers["Authorization"].startswith("Bearer ")
+            assert url.endswith("/chat/completions")
+            return _Response()
+
+    monkeypatch.setattr("app.council.live.httpx.Client", _Client)
+    verdict = run_council(_incident(), prefer_live=True)
+    assert verdict.mode == "live"
+    assert len(verdict.votes) >= 2
+    assert "Son karar İSG uzmanındadır." in verdict.synthesis
+
+
 def test_council_endpoint(client):
     spawned = client.post("/api/demo/spawn").json()
     rid = spawned["id"]

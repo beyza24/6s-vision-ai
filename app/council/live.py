@@ -58,12 +58,18 @@ def _endpoint_for(provider: str) -> tuple[str, str]:
     )
 
 
-def live_available() -> bool:
-    for m in _member_configs():
-        _, key = _endpoint_for(m["provider"])
+def keyed_member_count() -> int:
+    count = 0
+    for member in _member_configs():
+        _base, key = _endpoint_for(member["provider"])
         if key:
-            return True
-    return False
+            count += 1
+    return count
+
+
+def live_available() -> bool:
+    """Canlı tur ancak en az iki anahtarlı üye varken açılır."""
+    return keyed_member_count() >= 2
 
 
 def _prompt(incident: Incident) -> str:
