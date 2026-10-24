@@ -53,3 +53,36 @@ Son karar insandadır. Detay: `app/council/README.md`.
 ## Çözüm akışı
 
 Gözlemle → Tespit et → **LLM Council** → İnsan doğrular → Düzelt ve izle
+
+## Yapılan iş
+
+6S-VISION AI, fabrika kamerasındaki düzen ve iş güvenliği uygunsuzluklarını tek panelde toplayan bir denetim sistemidir. Kayıt izlenir, eksiklik bir olaya yazılır, birden fazla dil modeli aynı olayı ayrı ayrı oylar ve son kararı iş güvenliği uzmanı verir. Uzmanın kararı 6S skoruna ve haftalık rapora yansır.
+
+Bu repoda omurga, görüntü arayüzü, skor, kural taslağı, LLM Council ve denetim paneli aynı akışta birleşir. Test kaydında YOLO etiketleri videonun üstüne çizilir. Kayıtta süren “KKE yok” tespiti listede bir kez görünür; süre uzarsa panelde “Güvenlik açığı var” uyarısı çıkar. **Konseyi çalıştır** canlı modellere gider. **Doğrulama Yapıldı** ve **Yanlış Alarm** konseyden sonra da kullanılabilir.
+
+Ayrıntılı anlatım: [docs/PROJE-RAPORU.md](docs/PROJE-RAPORU.md) · indirilebilir kopya: [docs/PROJE-RAPORU.pdf](docs/PROJE-RAPORU.pdf)
+
+### Yazılım dilleri
+
+| Katman | Dil ve araç | Nerede |
+|--------|-------------|--------|
+| Arayüz | HTML, CSS, JavaScript | `frontend/` |
+| Sunucu ve API | Python, FastAPI, Pydantic, Uvicorn | `app/` |
+| Test | Python, pytest | `tests/` |
+| Sürekli denetim | GitHub Actions (YAML) | `.github/workflows/ci.yml` |
+| Görüntü modeli | Python, Ultralytics YOLO, OpenCV | `scripts/export_yolo_boxes.py`, `models/best.pt` |
+| Konsey çağrısı | Python, HTTP istemcisi, OpenAI uyumlu sohbet API | `app/council/` |
+
+Arayüzde derleme adımı yoktur. Tarayıcı HTML, CSS ve JavaScript dosyalarını doğrudan açar. Sunucu bu dosyaları statik olarak yayınlar ve `/api` uçlarını aynı uygulamada sunar.
+
+### Proje nasıl yapıldı
+
+1. Önce tek sayfalık panel prototipi yazıldı (`prototype/6s-vision-ai.html`).
+2. Dört kişilik ekip aynı repoda, dosya sahipliği ve çekme isteği ile ilerledi. Omurga, görüntü, skor/konsey ve panel ayrı klasörlerde durur.
+3. Olay kaydı için ortak şema ve bellek içi depo kuruldu. Sağlık, liste, doğrulama, yanlış alarm, atama, skor ve kural uçları buna bağlandı.
+4. Tespit tarafı bir arayüzle ayrıldı. Anahtarsız demo için sabit örnekler, panel demosu için eğitilmiş YOLO ağırlığı kullanıldı.
+5. Test videosunun her karesi modelden geçirildi. Kutu koordinatları JSON olarak saklandı. Tarayıcı videoyu oynatırken bu kutuları tuval üzerine çizer; model tarayıcıda çalışmaz.
+6. Kural ihlali kararı tek modele bırakılmadı. LLM Council her üyeden ayrı oy alır, başkan oyları birleştirir, panel gerekçe ve muhalefeti gösterir.
+7. Uzman doğrular, yanlış alarm der veya faaliyet atar. Skor, açık ve çözülen kayıtlardan hesaplanır. Haftalık rapor ekrandan yazdırılır.
+
+Video dosyası ve model ağırlığı boyut sınırı nedeniyle git geçmişine konmaz. Panel, bu dosyalar yerelde dururken aynı akışı çalıştırır.
