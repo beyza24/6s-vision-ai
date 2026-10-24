@@ -15,40 +15,48 @@
       </div>
       <button id="btn-demo" type="button">Demo: yeni tespit</button>
     </header>
+    <p id="notice" class="notice" hidden></p>
 
     <main class="main">
       <section class="card">
         <h2>Uygunsuzluklar</h2>
         <ul id="incident-list" class="list"></ul>
       </section>
+
       <section class="card" id="detail">
-        <h2>Detay &amp; AI Analizi</h2>
+        <h2>Detay ve AI analizi</h2>
         <p id="detail-empty" class="mute">Listeden bir olay seçin.</p>
         <div id="detail-body" hidden>
-          <h3 id="d-title"></h3>
+          <div class="title-row">
+            <h3 id="d-title"></h3>
+            <span id="d-status" class="chip"></span>
+          </div>
           <p id="d-meta" class="mute"></p>
           <p id="d-explain"></p>
+          <h3 class="sub">Eylem planı</h3>
           <ul id="d-plan"></ul>
           <div id="council-box" class="council" hidden>
-            <h4>LLM Council</h4>
-            <p id="d-council-syn" class="mute"></p>
-            <p id="d-council-dissent" class="mute"></p>
-            <ul id="d-council-votes"></ul>
+            <h3>LLM Council</h3>
+            <p id="d-council-syn"></p>
+            <p id="d-council-dissent" class="dissent"></p>
+            <ul id="d-council-votes" class="votes"></ul>
           </div>
           <div class="actions">
             <button id="btn-council" type="button">Konseyi çalıştır</button>
             <button id="btn-confirm" type="button">Doğrula</button>
             <button id="btn-false" type="button">Yanlış Alarm</button>
-            <button id="btn-assign" type="button">Faaliyet ata &amp; çöz</button>
+            <button id="btn-assign" type="button">Faaliyet ata</button>
           </div>
         </div>
       </section>
-      <section class="card">
+
+      <section class="card scores-card">
         <h2>6S Skorları</h2>
-        <pre id="scores">Yükleniyor…</pre>
+        <div id="scores" class="score-grid"></div>
       </section>
     </main>
   </div>
+  <script src="mock.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
