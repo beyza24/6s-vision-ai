@@ -54,6 +54,34 @@ Son karar insandadır. Detay: `app/council/README.md`.
 
 Gözlemle → Tespit et → **LLM Council** → İnsan doğrular → Düzelt ve izle
 
+## Akış şeması
+
+### Çalışma mantığı
+
+Kamera kaydı etiketlenir, eksiklik bir olaya yazılır, konsey önerir ve son kararı iş güvenliği uzmanı verir.
+
+```mermaid
+flowchart TD
+    A["Kamera kaydı"] --> B["YOLO etiketleri"]
+    B --> C["Uygunsuzluk kaydı"]
+    C --> D["LLM Council"]
+    D --> E{"İSG uzmanı"}
+    E -->|Doğrulama Yapıldı| F["Faaliyet ve 6S skoru"]
+    E -->|Yanlış Alarm| G["Puana girmez"]
+```
+
+### Görev dağılımı
+
+Dört kişi aynı repoda çalışır. Görüntü ve konsey omurgaya bağlanır. Panel bu API’yi gösterir. Birleştirmeyi K1 yapar.
+
+```mermaid
+flowchart LR
+    K2["K2 · nazlibeyza<br/>Görüntü"] --> K1["K1 · beyza24<br/>Omurga ve API"]
+    K3["K3 · ramazanhsnylmz<br/>Skor, kural, konsey"] --> K1
+    K1 --> K4["K4 · cosareda<br/>Denetim paneli"]
+    K4 --> U["İSG uzmanı"]
+```
+
 ## Yapılan iş
 
 6S-VISION AI, fabrika kamerasındaki düzen ve iş güvenliği uygunsuzluklarını tek panelde toplayan bir denetim sistemidir. Kayıt izlenir, eksiklik bir olaya yazılır, birden fazla dil modeli aynı olayı ayrı ayrı oylar ve son kararı iş güvenliği uzmanı verir. Uzmanın kararı 6S skoruna ve haftalık rapora yansır.

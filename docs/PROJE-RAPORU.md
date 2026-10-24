@@ -23,6 +23,30 @@ Bu rapor, yapılan işi, arayüz ve sunucuda kullanılan yazılım dillerini ve 
 
 Sistem kişiyi tanımaz. Kayda düşen şey ihlaldir. Son karar her zaman iş güvenliği uzmanındadır. Konsey önerir; paneli kapatmaz.
 
+### Çalışma mantığı
+
+```mermaid
+flowchart TD
+    A["Kamera kaydı"] --> B["YOLO etiketleri"]
+    B --> C["Uygunsuzluk kaydı"]
+    C --> D["LLM Council"]
+    D --> E{"İSG uzmanı"}
+    E -->|Doğrulama Yapıldı| F["Faaliyet ve 6S skoru"]
+    E -->|Yanlış Alarm| G["Puana girmez"]
+```
+
+### Görev dağılımı
+
+K2 görüntüyü, K3 skor ve konseyi üretir. İkisi K1 omurgasına bağlanır. K4 paneli bu API üzerinden çizer. Son düğüm iş güvenliği uzmanıdır.
+
+```mermaid
+flowchart LR
+    K2["K2 · nazlibeyza<br/>Görüntü"] --> K1["K1 · beyza24<br/>Omurga ve API"]
+    K3["K3 · ramazanhsnylmz<br/>Skor, kural, konsey"] --> K1
+    K1 --> K4["K4 · cosareda<br/>Denetim paneli"]
+    K4 --> U["İSG uzmanı"]
+```
+
 Bu çalışmada repoda biriken omurga ile panel demosu aynı ekranda buluştu:
 
 - Olay kaydı, durum geçişleri ve skor için çalışan bir API.

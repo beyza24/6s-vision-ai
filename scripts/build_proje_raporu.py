@@ -178,6 +178,7 @@ def build() -> None:
     cover(pdf)
 
     in_code = False
+    skip_diagram = False
     code: list[str] = []
     table_rows: list[list[str]] = []
     in_table = False
@@ -199,15 +200,19 @@ def build() -> None:
                 continue
         if line.startswith("```"):
             if in_code:
-                code_block(pdf, code)
+                if not skip_diagram:
+                    code_block(pdf, code)
                 code = []
                 in_code = False
+                skip_diagram = False
             else:
                 flush_table()
                 in_code = True
+                skip_diagram = line.strip() == "```mermaid"
             continue
         if in_code:
-            code.append(line)
+            if not skip_diagram:
+                code.append(line)
             continue
         if line.startswith("|"):
             cells = [re.sub(r"[`*]", "", cell.strip()) for cell in line.strip("|").split("|")]
