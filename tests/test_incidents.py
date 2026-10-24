@@ -45,3 +45,36 @@ def test_incident_api_flow(client):
     body = scores.json()
     assert "overall" in body
     assert "safety" in body
+
+
+def test_rule_routes_fake_then_approve(client):
+    parsed = client.post("/api/rules/parse", json={"text": "Hat 2'de baret zorunlu"})
+    assert parsed.status_code == 200
+    draft = parsed.json()
+    assert draft["status"] == "pending_approval"
+    assert "baret" in draft["raw_text"]
+    assert draft["id"]
+
+    approved = client.post(f"/api/rules/{draft['id']}/approve")
+    assert approved.status_code == 200
+    assert approved.json()["status"] == "active"
+
+
+def test_openapi_lists_incident_routes(client):
+    spec = client.get("/openapi.json")
+    assert spec.status_code == 200
+    paths = spec.json()["paths"]
+    for path in (
+        "/health",
+        "/api/incidents",
+        "/api/incidents/{incident_id}",
+        "/api/incidents/{incident_id}/confirm",
+        "/api/incidents/{incident_id}/false-alarm",
+        "/api/incidents/{incident_id}/assign",
+        "/api/scores/6s",
+        "/api/rules/parse",
+        "/api/rules/{rule_id}/approve",
+        "/api/demo/spawn",
+        "/api/incidents/{incident_id}/council",
+    ):
+        assert path in paths
