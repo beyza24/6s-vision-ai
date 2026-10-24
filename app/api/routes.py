@@ -1,6 +1,8 @@
 """API routes — k1 wires modules owned by k2/k3."""
 from __future__ import annotations
 
+from uuid import uuid4
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -80,13 +82,24 @@ class ParseRuleBody(BaseModel):
     text: str
 
 
+def _fallback_rule(text: str) -> RuleDraft:
+    """k3 parser yokken sözleşme: taslak, onay bekler, 200."""
+    return RuleDraft(
+        id=str(uuid4()),
+        raw_text=text,
+        condition=text.strip(),
+        status="pending_approval",
+    )
+
+
 @router.post("/api/rules/parse", response_model=RuleDraft)
 def parse_rule(body: ParseRuleBody) -> RuleDraft:
     try:
         from app.rules.parser import parse_natural_language_rule
-    except ImportError as exc:
-        raise HTTPException(501, "rules module not ready") from exc
-    draft = parse_natural_language_rule(body.text)
+    except ImportError:
+        draft = _fallback_rule(body.text)
+    else:
+        draft = parse_natural_language_rule(body.text)
     return store.add_rule(draft)
 
 
